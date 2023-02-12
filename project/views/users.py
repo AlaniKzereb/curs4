@@ -1,24 +1,52 @@
 import token
 
 import jwt
+import user_profile as user_profile
 from flask import request
-from flask_restx import Resource, Namespace
+from flask_restx import Namespace, Resource
+from requests import api
 
 from project.constants import PWD_HASH_SALT
 from project.dao.model.user import UserSchema
 from project.implemented import user_service
-from project.utils import authorized, auth_required
+from project.service.auth import AuthService
+from project.setup_db import db
+from project.utils import auth_required, login_required
 
 user_ns = Namespace('user')
 
+# @api.route('/', endpoint='profile_view')
+# class UserProfileView(Resource):
+#
+#     @api.marshal_with(user_profile, code=200, description='OK')
+#     @login_required
+#     def get(self, user_id: int):
+#         """
+#         Получить профиль пользователя.
+#         """
+#         return AuthService(db.session).get_user_profile(user_id)
 
-@user_ns.route('/')
+
+# @api.route('/', endpoint='profile_view')
+# class UserProfileView(Resource):
+#
+#     @api.marshal_with(user_profile, code=200, description='OK')
+#     @login_required
+#     def get(self, user_id: int):
+#         """
+#         Получить профиль пользователя.
+#         """
+#         return AuthService(db.session).get_user_profile(user_id)
+# @user_ns.route('/')
 class UsersView(Resource):
-    @auth_required
-    def get(self):
-        user = user_service.get_one(uid)
-        sm_d = UserSchema().dump(user)
-        return sm_d, 200
+    @login_required
+    def get(self, user_id: int):
+        """
+        Получить профиль пользователя.
+        """
+        return AuthService(db.session).get_user_profile(user_id)
+
+
 
     def patch(self, uid):
         user_service.patch(uid)

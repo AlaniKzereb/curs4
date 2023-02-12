@@ -5,28 +5,28 @@ class UserDAO:
     def __init__(self, session):
         self.session = session
 
-    def get_one(self, uid):
-        return self.session.query(User).get(uid)
+    def get_one(self, user_id):
+        return self.session.query(User).get(user_id)
 
     def get_all(self):
         return self.session.query(User).all()
 
-    def create(self, user_d):
-        ent = User(**user_d)
+    def create(self, user_id):
+        ent = User(**user_id)
         self.session.add(ent)
         self.session.commit()
         return ent
 
-    def delete(self, uid):
-        user = self.get_one(uid)
+    def delete(self, user_id):
+        user = self.get_one(user_id)
         self.session.delete(user)
         self.session.commit()
 
-    def update(self, user_d):
-        user = self.get_one(user_d.get("id"))
-        user.name = self.get_one(user_d.get("name"))
-        user.password = self.get_one(user_d.get("password"))
-        user.role = self.get_one(user_d.get("role"))
+    def update(self, user_id):
+        user = self.get_one(user_id.get("id"))
+        user.name = self.get_one(user_id.get("name"))
+        user.password = self.get_one(user_id.get("password"))
+        user.role = self.get_one(user_id.get("role"))
 
         self.session.add(user)
         self.session.commit()

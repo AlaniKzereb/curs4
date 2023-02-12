@@ -5,7 +5,9 @@ import hashlib
 import jwt
 
 from project.constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS
+from project.dao.model.user import UserSchema
 from project.dao.user import UserDAO
+
 
 
 class AuthService:
@@ -58,3 +60,8 @@ class AuthService:
             return None
 
         return self.get_access_token(data)
+
+    def get_user_profile(self, user_id):
+        user = self.dao.get_one(user_id)
+        sm_d = UserSchema().dump(user)
+        return sm_d, 200
