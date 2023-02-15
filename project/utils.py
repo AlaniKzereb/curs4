@@ -86,19 +86,23 @@ def admin_required(func):
 #     return wrapper
 
 def login_required(func):
+
     @wraps(func)
     def wrapper(*args, **kwargs):
 
-        if authorization_header := request.headers.get('Authorization'):
+        authorization_header = request.headers.get('Authorization')
+        if authorization_header:
 
             with suppress(PyJWTError):
-                if user_id := jwt.decode(
+                user_id = jwt.decode(
                     jwt=authorization_header.split('Bearer ')[-1],
                     key=current_app.config['SECRET_KEY'],
                     algorithms=['HS256'],
-                ).get('id'):
+                ).get('id')
+
+                if user_id:
                     return func(user_id=user_id, *args, **kwargs)
 
-        raise AuthenticationError
+            raise AuthenticationError
 
     return wrapper
